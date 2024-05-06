@@ -4,8 +4,10 @@
 void welcomeScreen();
 bool isInsideButton(int x, int y, int buttonLeft, int buttonTop, int buttonRight, int buttonBottom);
 void waitForButtonClick(int buttonLeft, int buttonTop, int buttonRight, int buttonBottom);
+void drawTank();
 
 int main() {
+    //PRIMERA INTERFAZ
     // Tamaño de la pantalla
     int width = 800;
     int height = 800;
@@ -25,6 +27,13 @@ int main() {
 
     // Limpiar la pantalla
     cleardevice();
+    //FIN PRIMERA INTERFAZ
+    
+    //Second Interface
+
+    //IMAGEN DEL TANQUE DE AGUA
+    drawTank();
+
 
     // Esperar a que el usuario presione una tecla antes de cerrar la ventana
     getch();
@@ -67,4 +76,21 @@ void waitForButtonClick(int buttonLeft, int buttonTop, int buttonRight, int butt
         }
         delay(100);
     }
+}
+
+void drawTank()
+{
+    int width = getmaxx();
+    int height = getmaxy();
+
+    //Size of 
+    int tankWidth = width * 2 / 3;  // Toma dos tercios del ancho de la ventana
+    int tankHeight = height * 2 / 3; // Toma dos tercios de la altura de la ventana
+
+    // Calcular las coordenadas para posicionar la imagen en el centro horizontal y un poco arriba
+    int tankLeft = (width - tankWidth) / 2;
+    int tankTop = 0;
+
+    // Cargar la imagen del tanque de agua
+    readimagefile("tank.jpg", tankLeft, tankTop, tankLeft + tankWidth, tankTop + tankHeight);
 }
