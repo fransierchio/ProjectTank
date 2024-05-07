@@ -6,6 +6,7 @@ bool isInsideButton(int x, int y, int buttonLeft, int buttonTop, int buttonRight
 void waitForButtonClick(int buttonLeft, int buttonTop, int buttonRight, int buttonBottom);
 void drawTank();
 void drawPanel();
+void FillButtom();
 void fillTank();
 bool isInsideCircle(int x, int y, int centerX, int centerY, int radius);
 
@@ -114,7 +115,7 @@ void drawPanel()
 
     // Cargar la imagen del tanque de agua
     readimagefile("panel.jpg", tankLeft, tankTop, tankLeft + tankWidth, tankTop + tankHeight);
-    fillTank();
+    FillButtom();
 }
 
 void FillButtom() 
@@ -135,7 +136,7 @@ void FillButtom()
         // Verificar si el clic del mouse está dentro del botón circular
         if (isInsideCircle(x, y, fillButtonCenterX, fillButtonCenterY, fillButtonRadius)) 
             {
-                
+                fillTank();
             }
         }
     }
@@ -145,4 +146,27 @@ bool isInsideCircle(int x, int y, int centerX, int centerY, int radius) {
     int dx = x - centerX;
     int dy = y - centerY;
     return dx * dx + dy * dy <= radius * radius;
+}
+
+void fillTank()
+{
+    int tankWidth = 185; // Ancho del tanque
+    int tankHeight = 295; // Altura del tanque
+    int tankLeft = (getmaxx() - tankWidth-10) / 2; // Posición izquierda del tanque
+    int tankTop = (getmaxy() - tankHeight-209) / 2; // Posición superior del tanque
+
+    int waterLevel = tankTop + tankHeight; // Nivel inicial del agua (en la parte inferior del tanque)
+    int fillSpeed = 1; // Velocidad de llenado (píxeles por iteración)
+
+    setcolor(LIGHTCYAN); // Color del agua
+    setfillstyle(SOLID_FILL, LIGHTCYAN);
+    while (waterLevel > tankTop ) { 
+        int topOfWater = waterLevel - fillSpeed; 
+        if (topOfWater < tankTop) { 
+            topOfWater = tankTop; 
+        }
+        bar(tankLeft, topOfWater, tankLeft + tankWidth, waterLevel); // Dibujar una porción de agua
+        waterLevel -= fillSpeed; // Decrementar la posición vertical para la próxima porción de agua
+        delay(50); // Pequeña pausa para la animación
+    }
 }
