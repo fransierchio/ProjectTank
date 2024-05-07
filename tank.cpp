@@ -4,8 +4,7 @@
 void welcomeScreen();
 bool isInsideButton(int x, int y, int buttonLeft, int buttonTop, int buttonRight, int buttonBottom);
 void waitForButtonClick(int buttonLeft, int buttonTop, int buttonRight, int buttonBottom);
-void drawTank();
-void drawPanel();
+void drawBackground();
 void FillButtom();
 void fillTank();
 bool isInsideCircle(int x, int y, int centerX, int centerY, int radius);
@@ -13,8 +12,8 @@ bool isInsideCircle(int x, int y, int centerX, int centerY, int radius);
 int main() {
     //PRIMERA INTERFAZ
     // Tamaño de la pantalla
-    int width = 800;
-    int height = 800;
+    int width = 1300;
+    int height = 900;
     initwindow(width, height, "Control Panel");
 
     // Pantalla de bienvenida
@@ -36,8 +35,7 @@ int main() {
     //Second Interface
 
     //IMAGEN DEL TANQUE DE AGUA
-    drawTank();
-    drawPanel();
+    drawBackground();
 
 
     // Esperar a que el usuario presione una tecla antes de cerrar la ventana
@@ -83,47 +81,25 @@ void waitForButtonClick(int buttonLeft, int buttonTop, int buttonRight, int butt
     }
 }
 
-void drawTank()
+void drawBackground()
 {
     int width = getmaxx();
     int height = getmaxy();
 
     //Size of 
-    int tankWidth = width * 2 / 3;  // Toma dos tercios del ancho de la ventana
-    int tankHeight = height * 2 / 3; // Toma dos tercios de la altura de la ventana
+    int bgWidth = width;  
+    int bgHeight = height;
 
-    // Calcular las coordenadas para posicionar la imagen en el centro horizontal y un poco arriba
-    int tankLeft = (width - tankWidth) / 2;
-    int tankTop = 0;
-
-    // Cargar la imagen del tanque de agua
-    readimagefile("tank.jpg", tankLeft, tankTop, tankLeft + tankWidth, tankTop + tankHeight);
-}
-
-void drawPanel()
-{
-    int width = getmaxx();
-    int height = getmaxy();
-
-    //Size of 
-    int tankWidth = width * 1 / 3;  // Toma dos tercios del ancho de la ventana
-    int tankHeight = height * 1 / 3; // Toma dos tercios de la altura de la ventana
-
-    // Calcular las coordenadas para posicionar la imagen en el centro horizontal y un poco arriba
-    int tankLeft = (width-tankWidth)/2;
-    int tankTop = width-tankHeight;
-
-    // Cargar la imagen del tanque de agua
-    readimagefile("panel.jpg", tankLeft, tankTop, tankLeft + tankWidth, tankTop + tankHeight);
+    readimagefile("background.jpg", 0, 0, bgWidth,bgHeight);
     FillButtom();
 }
 
 void FillButtom() 
 {
     
-    int fillButtonCenterX = 322; 
-    int fillButtonCenterY = 708; 
-    int fillButtonRadius = 30;
+    int fillButtonCenterX = 760; 
+    int fillButtonCenterY = 326; 
+    int fillButtonRadius = 56;
     setcolor(RED);
     circle(fillButtonCenterX, fillButtonCenterY, fillButtonRadius);
 
@@ -150,13 +126,13 @@ bool isInsideCircle(int x, int y, int centerX, int centerY, int radius) {
 
 void fillTank()
 {
-    int tankWidth = 185; // Ancho del tanque
-    int tankHeight = 295; // Altura del tanque
-    int tankLeft = (getmaxx() - tankWidth-10) / 2; // Posición izquierda del tanque
-    int tankTop = (getmaxy() - tankHeight-209) / 2; // Posición superior del tanque
+    int tankWidth = 230; 
+    int tankHeight = 610; 
+    int tankLeft =186;
+    int tankTop = 185;
 
     int waterLevel = tankTop + tankHeight; // Nivel inicial del agua (en la parte inferior del tanque)
-    int fillSpeed = 1; // Velocidad de llenado (píxeles por iteración)
+    int fillSpeed = 4; // Velocidad de llenado (píxeles por iteración)
 
     setcolor(LIGHTCYAN); // Color del agua
     setfillstyle(SOLID_FILL, LIGHTCYAN);
