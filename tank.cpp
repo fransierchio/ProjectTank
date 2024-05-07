@@ -5,6 +5,9 @@ void welcomeScreen();
 bool isInsideButton(int x, int y, int buttonLeft, int buttonTop, int buttonRight, int buttonBottom);
 void waitForButtonClick(int buttonLeft, int buttonTop, int buttonRight, int buttonBottom);
 void drawTank();
+void drawPanel();
+void fillTank();
+bool isInsideCircle(int x, int y, int centerX, int centerY, int radius);
 
 int main() {
     //PRIMERA INTERFAZ
@@ -33,6 +36,7 @@ int main() {
 
     //IMAGEN DEL TANQUE DE AGUA
     drawTank();
+    drawPanel();
 
 
     // Esperar a que el usuario presione una tecla antes de cerrar la ventana
@@ -93,4 +97,52 @@ void drawTank()
 
     // Cargar la imagen del tanque de agua
     readimagefile("tank.jpg", tankLeft, tankTop, tankLeft + tankWidth, tankTop + tankHeight);
+}
+
+void drawPanel()
+{
+    int width = getmaxx();
+    int height = getmaxy();
+
+    //Size of 
+    int tankWidth = width * 1 / 3;  // Toma dos tercios del ancho de la ventana
+    int tankHeight = height * 1 / 3; // Toma dos tercios de la altura de la ventana
+
+    // Calcular las coordenadas para posicionar la imagen en el centro horizontal y un poco arriba
+    int tankLeft = (width-tankWidth)/2;
+    int tankTop = width-tankHeight;
+
+    // Cargar la imagen del tanque de agua
+    readimagefile("panel.jpg", tankLeft, tankTop, tankLeft + tankWidth, tankTop + tankHeight);
+    fillTank();
+}
+
+void FillButtom() 
+{
+    
+    int fillButtonCenterX = 322; 
+    int fillButtonCenterY = 708; 
+    int fillButtonRadius = 30;
+    setcolor(RED);
+    circle(fillButtonCenterX, fillButtonCenterY, fillButtonRadius);
+
+    while (true) 
+    {
+        int x, y;
+        if (ismouseclick(WM_LBUTTONDOWN)) 
+        {
+            getmouseclick(WM_LBUTTONDOWN, x, y);
+        // Verificar si el clic del mouse está dentro del botón circular
+        if (isInsideCircle(x, y, fillButtonCenterX, fillButtonCenterY, fillButtonRadius)) 
+            {
+                
+            }
+        }
+    }
+}
+
+bool isInsideCircle(int x, int y, int centerX, int centerY, int radius) {
+    int dx = x - centerX;
+    int dy = y - centerY;
+    return dx * dx + dy * dy <= radius * radius;
 }
