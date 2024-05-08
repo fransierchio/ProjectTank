@@ -1,13 +1,18 @@
 #include <iostream>
 #include <graphics.h>
+using namespace std;
+
 
 void welcomeScreen();
 bool isInsideButton(int x, int y, int buttonLeft, int buttonTop, int buttonRight, int buttonBottom);
 void waitForButtonClick(int buttonLeft, int buttonTop, int buttonRight, int buttonBottom);
 void drawBackground();
-void FillButtom();
-void fillTank();
+void FillButtom(int x, int y);
+void StopButtom(int x, int y);
 bool isInsideCircle(int x, int y, int centerX, int centerY, int radius);
+void fillTank();
+
+bool stopFilling = true;
 
 int main() {
     //PRIMERA INTERFAZ
@@ -33,10 +38,22 @@ int main() {
     //FIN PRIMERA INTERFAZ
     
     //Second Interface
-
     //IMAGEN DEL TANQUE DE AGUA
     drawBackground();
+    while (!kbhit()) 
+    {
+        int x, y;
+        if (ismouseclick(WM_LBUTTONDOWN)) 
+            {
+                getmouseclick(WM_LBUTTONDOWN, x, y);
+                FillButtom(x, y);
+                StopButtom(x, y);
+            }
 
+        if (!stopFilling) {
+            fillTank();
+        }
+    }
 
     // Esperar a que el usuario presione una tecla antes de cerrar la ventana
     getch();
@@ -91,10 +108,9 @@ void drawBackground()
     int bgHeight = height;
 
     readimagefile("background.jpg", 0, 0, bgWidth,bgHeight);
-    FillButtom();
 }
 
-void FillButtom() 
+void FillButtom(int x, int y) 
 {
     
     int fillButtonCenterX = 760; 
@@ -103,19 +119,30 @@ void FillButtom()
     setcolor(RED);
     circle(fillButtonCenterX, fillButtonCenterY, fillButtonRadius);
 
-    while (true) 
-    {
-        int x, y;
-        if (ismouseclick(WM_LBUTTONDOWN)) 
-        {
-            getmouseclick(WM_LBUTTONDOWN, x, y);
         // Verificar si el clic del mouse está dentro del botón circular
         if (isInsideCircle(x, y, fillButtonCenterX, fillButtonCenterY, fillButtonRadius)) 
             {
                 fillTank();
+                stopFilling = false;
+                
             }
-        }
-    }
+}
+
+void StopButtom(int x, int y) 
+{
+    
+    int StopButtonCenterX = 964; 
+    int StopButtonCenterY = 320; 
+    int StopButtonRadius = 56;
+    setcolor(RED);
+    circle(StopButtonCenterX, StopButtonCenterY, StopButtonRadius);
+
+        // Verificar si el clic del mouse está dentro del botón circular
+        if (isInsideCircle(x, y, StopButtonCenterX, StopButtonCenterY, StopButtonRadius)) 
+            {
+                cout << "Botón de detención presionado" << endl;
+                stopFilling = true;
+            }
 }
 
 bool isInsideCircle(int x, int y, int centerX, int centerY, int radius) {
@@ -124,8 +151,7 @@ bool isInsideCircle(int x, int y, int centerX, int centerY, int radius) {
     return dx * dx + dy * dy <= radius * radius;
 }
 
-void fillTank()
-{
+void fillTank() {
     int tankWidth = 230; 
     int tankHeight = 610; 
     int tankLeft =186;
@@ -133,16 +159,15 @@ void fillTank()
 
     int waterLevel = tankTop + tankHeight; // Nivel inicial del agua (en la parte inferior del tanque)
     int fillSpeed = 4; // Velocidad de llenado (píxeles por iteración)
+    int maxWaterLevel = tankTop; // Nivel máximo de agua en el tanque
 
-    setcolor(LIGHTCYAN); // Color del agua
+    setcolor(LIGHTCYAN);
     setfillstyle(SOLID_FILL, LIGHTCYAN);
-    while (waterLevel > tankTop ) { 
-        int topOfWater = waterLevel - fillSpeed; 
-        if (topOfWater < tankTop) { 
-            topOfWater = tankTop; 
-        }
-        bar(tankLeft, topOfWater, tankLeft + tankWidth, waterLevel); // Dibujar una porción de agua
-        waterLevel -= fillSpeed; // Decrementar la posición vertical para la próxima porción de agua
-        delay(50); // Pequeña pausa para la animación
+    
+    // Llenar el tanque mientras stopFilling sea falso y el nivel de agua sea mayor que el nivel máximo
+    while (!stopFilling && waterLevel > maxWaterLevel) { 
+        bar(tankLeft, waterLevel - fillSpeed, tankLeft + tankWidth, waterLevel);
+        waterLevel -= fillSpeed; // Disminuir el nivel de agua
+        delay(50);
     }
 }
