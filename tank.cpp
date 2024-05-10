@@ -66,14 +66,15 @@ void FillButtom(int x, int y)
         // Verificar si el clic del mouse está dentro del botón circular
         if (isInsideCircle(x, y, fillButtonCenterX, fillButtonCenterY, fillButtonRadius)) 
             {
-                thread fillThread;
-                if (!fillThread.joinable()) { // Verificar si el hilo ya se ha unido o está en ejecución
-                fillThread = thread(fillTank); // Iniciar un nuevo hilo solo si no hay ninguno en ejecución
-                fillThread.detach();
-                stopFilling = false;
+                if (!fillingInProgress) 
+                { 
+                    fillingInProgress = true; 
+                    thread fillThread(fillTank); 
+                    fillThread.detach();
+                    stopFilling = false;
                 }
-                
             }
+            
 }
 
 void StopButtom(int x, int y) 
@@ -114,4 +115,5 @@ void fillTank() {
         waterLevel -= fillSpeed; // Disminuir el nivel de agua
         delay(50);
     }
+    fillingInProgress = false; 
 }
