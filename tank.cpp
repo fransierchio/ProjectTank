@@ -8,11 +8,14 @@ void FillButtom(int x, int y);
 void StopButtom(int x, int y);
 bool isInsideCircle(int x, int y, int centerX, int centerY, int radius);
 void fillTank();
+void DrainButtom(int x, int y);
+void DrainTank();
+//vaciado, subir potencia, bajar potencia, litraje.
 
 //variables globales
 bool fillingInProgress = false;
 bool stopFilling = true;
-int tankHeight = 610; 
+int tankHeight = 605; 
 int tankTop = 185;
 int waterLevel = tankTop + tankHeight;
 
@@ -26,12 +29,14 @@ int main() {
     //IMAGEN DEL TANQUE DE AGUA
     drawBackground();
 
+
     int x, y;
     while (!kbhit()) 
     {
         getmouseclick(WM_LBUTTONDOWN, x, y);
         FillButtom(x, y);
         StopButtom(x, y);
+        DrainButtom(x,y);
     }
 
     return 0;
@@ -39,9 +44,7 @@ int main() {
 
 void drawBackground()
 {
-    int width = getmaxx();
-    int height = getmaxy();
-    readimagefile("background.jpg", 0, 0, width,height);
+    readimagefile("background.jpg", 0, 0, getmaxx(),getmaxy());
 }
 
 bool isInsideCircle(int x, int y, int centerX, int centerY, int radius) {
@@ -76,6 +79,22 @@ void StopButtom(int x, int y)
             }
 }
 
+void DrainButtom(int x, int y) 
+{
+    int fillButtonCenterX = 1175; int fillButtonCenterY = 324; int fillButtonRadius = 59;
+    // Verificar si el clic del mouse está dentro del botón circular
+    if (isInsideCircle(x, y, fillButtonCenterX, fillButtonCenterY, fillButtonRadius)) 
+        {
+            if (!fillingInProgress) 
+            { 
+                fillingInProgress = true; 
+                thread DrainThread(DrainTank); 
+                DrainThread.detach();
+                stopFilling = false;
+            }
+        }   
+}
+
 void fillTank() {
     int tankWidth = 230; 
     int tankLeft =186;
@@ -85,10 +104,32 @@ void fillTank() {
     setfillstyle(SOLID_FILL, LIGHTCYAN);
     
     // Llenar el tanque mientras stopFilling sea falso y el nivel de agua sea mayor que el nivel máximo
-    while (!stopFilling && waterLevel > tankTop) { 
+    while (!stopFilling && waterLevel >= tankTop) { 
         bar(tankLeft, waterLevel - fillSpeed, tankLeft + tankWidth, waterLevel);
         waterLevel -= fillSpeed; // Disminuir el nivel de agua
         delay(50);
     }
     fillingInProgress = false; 
+}
+
+void DrainTank() 
+{
+    int tankWidth = 230; 
+    int tankLeft =186;
+    int DrainSpeed = 4;
+    
+    while (!stopFilling && waterLevel < tankTop + tankHeight) 
+    {
+        // Restaurar el área del agua a la imagen de fondo original
+        readimagefile("background.jpg", 0, 0, getmaxx(), getmaxy());
+        // Restaurar el área del agua a la imagen original
+        bar(tankLeft, waterLevel, tankLeft + tankWidth, tankTop + tankHeight);
+        waterLevel += DrainSpeed; // Aumentar el nivel de agua
+    }
+
+    if (waterLevel >= tankTop + tankHeight)
+    {
+        drawBackground();
+    }
+    fillingInProgress = false;
 }
