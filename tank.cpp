@@ -10,6 +10,7 @@ bool isInsideCircle(int x, int y, int centerX, int centerY, int radius);
 void fillTank();
 void DrainButtom(int x, int y);
 void DrainTank();
+void showWaterLevel();
 //vaciado, subir potencia, bajar potencia, litraje.
 
 //variables globales
@@ -104,10 +105,11 @@ void fillTank() {
     setfillstyle(SOLID_FILL, LIGHTCYAN);
     
     // Llenar el tanque mientras stopFilling sea falso y el nivel de agua sea mayor que el nivel máximo
-    while (!stopFilling && waterLevel >= tankTop) { 
+    while (!stopFilling && waterLevel > tankTop) { 
         bar(tankLeft, waterLevel - fillSpeed, tankLeft + tankWidth, waterLevel);
         waterLevel -= fillSpeed; // Disminuir el nivel de agua
         delay(50);
+        showWaterLevel();
     }
     fillingInProgress = false; 
 }
@@ -125,11 +127,35 @@ void DrainTank()
         // Restaurar el área del agua a la imagen original
         bar(tankLeft, waterLevel, tankLeft + tankWidth, tankTop + tankHeight);
         waterLevel += DrainSpeed; // Aumentar el nivel de agua
+        showWaterLevel();
+        
     }
 
     if (waterLevel >= tankTop + tankHeight)
     {
+        showWaterLevel();
         drawBackground();
+        
     }
     fillingInProgress = false;
+}
+
+void showWaterLevel() {
+    int tankCapacity = 300; // Capacidad del tanque en litros
+    double waterHeight = waterLevel - tankTop; // Altura del agua en el tanque
+    double ratio = waterHeight / tankHeight; // Proporción del tanque ocupada por el agua
+    double waterVolume = tankCapacity * ratio; // Volumen de agua en el tanque
+    double Volume =  tankCapacity - waterVolume; // Volumen restante de agua en el tanque
+    char text[10];
+    if (Volume > 300) 
+    {
+        Volume=300;
+    }
+    sprintf(text, "%.0f",Volume); // Formatear el texto
+    int x = 890; // Posición x del texto
+    int y = 570; // Posición y del texto
+
+    setcolor(WHITE); // Establecer el color del texto
+    settextstyle(DEFAULT_FONT, HORIZ_DIR, 4);
+    outtextxy(x, y,text); // Dibujar el texto en la ventana gráfica
 }
