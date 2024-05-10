@@ -4,14 +4,14 @@
 using namespace std;
 
 void drawBackground();
-void FillButtom(int x, int y);
-void StopButtom(int x, int y);
-bool isInsideCircle(int x, int y, int centerX, int centerY, int radius);
+void FillButtom(int &x, int &y);
+void StopButtom(int &x, int &y);
+bool isInsideCircle(int &x, int &y, int &centerX, int &centerY, int &radius);
 void fillTank();
-void DrainButtom(int x, int y);
+void DrainButtom(int &x, int &y);
 void DrainTank();
 void showWaterLevel();
-//vaciado, subir potencia, bajar potencia, litraje.
+// subir potencia, bajar potencia, LUCES LED
 
 //variables globales
 bool fillingInProgress = false;
@@ -48,13 +48,13 @@ void drawBackground()
     readimagefile("background.jpg", 0, 0, getmaxx(),getmaxy());
 }
 
-bool isInsideCircle(int x, int y, int centerX, int centerY, int radius) {
+bool isInsideCircle(int &x, int &y, int &centerX, int &centerY, int &radius) {
     int dx = x - centerX;
     int dy = y - centerY;
     return dx * dx + dy * dy <= radius * radius;
 }
 
-void FillButtom(int x, int y) 
+void FillButtom(int &x, int &y) 
 {
     int fillButtonCenterX = 760; int fillButtonCenterY = 326; int fillButtonRadius = 56;
     // Verificar si el clic del mouse está dentro del botón circular
@@ -70,7 +70,7 @@ void FillButtom(int x, int y)
         }   
 }
 
-void StopButtom(int x, int y) 
+void StopButtom(int &x, int &y) 
 {
     int StopButtonCenterX = 964; int StopButtonCenterY = 320; int StopButtonRadius = 56;
         // Verificar si el clic del mouse está dentro del botón circular
@@ -80,7 +80,7 @@ void StopButtom(int x, int y)
             }
 }
 
-void DrainButtom(int x, int y) 
+void DrainButtom(int &x, int &y) 
 {
     int fillButtonCenterX = 1175; int fillButtonCenterY = 324; int fillButtonRadius = 59;
     // Verificar si el clic del mouse está dentro del botón circular
@@ -152,10 +152,9 @@ void showWaterLevel() {
         Volume=300;
     }
     sprintf(text, "%.0f",Volume); // Formatear el texto
-    int x = 890; // Posición x del texto
-    int y = 570; // Posición y del texto
-
-    setcolor(WHITE); // Establecer el color del texto
+    int x = 890; 
+    int y = 570; 
+    setcolor(WHITE);
     settextstyle(DEFAULT_FONT, HORIZ_DIR, 4);
-    outtextxy(x, y,text); // Dibujar el texto en la ventana gráfica
+    outtextxy(x, y,text); 
 }
