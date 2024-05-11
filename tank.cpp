@@ -11,6 +11,8 @@ void fillTank();
 void DrainButtom(int &x, int &y);
 void DrainTank();
 void showWaterLevel();
+void voltButtom(int &x, int &y);
+void showVolt();
 // subir potencia, bajar potencia, LUCES LED
 
 //variables globales
@@ -19,6 +21,7 @@ bool stopFilling = true;
 int tankHeight = 605; 
 int tankTop = 185;
 int waterLevel = tankTop + tankHeight;
+int DrainSpeed=4, fillSpeed=1;
 
 
 int main() {
@@ -38,6 +41,7 @@ int main() {
         FillButtom(x, y);
         StopButtom(x, y);
         DrainButtom(x,y);
+        voltButtom(x,y);
     }
 
     return 0;
@@ -99,7 +103,6 @@ void DrainButtom(int &x, int &y)
 void fillTank() {
     int tankWidth = 230; 
     int tankLeft =186;
-    int fillSpeed = 4; // Velocidad de llenado
 
     setcolor(LIGHTCYAN);
     setfillstyle(SOLID_FILL, LIGHTCYAN);
@@ -118,8 +121,7 @@ void DrainTank()
 {
     int tankWidth = 230; 
     int tankLeft =186;
-    int DrainSpeed = 4;
-    
+ 
     while (!stopFilling && waterLevel < tankTop + tankHeight) 
     {
         // Restaurar el área del agua a la imagen de fondo original
@@ -157,4 +159,33 @@ void showWaterLevel() {
     setcolor(WHITE);
     settextstyle(DEFAULT_FONT, HORIZ_DIR, 4);
     outtextxy(x, y,text); 
+}
+
+void voltButtom(int &x, int &y)
+{
+    //posiciones volt fill
+    int up_voltFillx=718; int up_voltFilly=557; int up_voltFillradius = 35; 
+    int down_voltFillx=800; int down_voltFilly=557; int down_voltFillradius = 36;
+
+    //posiciones volt drain
+    int up_voltDrainx=1135;int up_voltDrainy=557;int up_voltDrainradius = 35; 
+    int down_voltDrainx=1217;int down_voltDrainy=557;int down_voltDrainradius = 36;
+
+    if (isInsideCircle(x, y, up_voltFillx, up_voltFilly, up_voltFillradius) && fillSpeed <10)
+    {
+        fillSpeed++;
+    }
+    if (isInsideCircle(x, y, down_voltFillx, down_voltFilly, down_voltFillradius) && fillSpeed>1)
+    {
+        fillSpeed--;
+    }
+    if (isInsideCircle(x, y, up_voltDrainx, up_voltDrainy, up_voltDrainradius) && DrainSpeed<10)
+    {
+        DrainSpeed++;
+    }
+    if (isInsideCircle(x, y, down_voltDrainx, down_voltDrainy, down_voltDrainradius) && DrainSpeed>1)
+    {
+        DrainSpeed--;
+    }
+    
 }
