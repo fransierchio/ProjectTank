@@ -133,7 +133,7 @@ void DrainTank()
     int tankWidth = 256; 
     int tankLeft =519;
  
-    while (!stopFilling && waterLevel < tankTop + tankHeight) 
+    while (!stopFilling && waterLevel <= tankTop + tankHeight) 
     {
         drawBackground();
         setcolor(LIGHTCYAN);
