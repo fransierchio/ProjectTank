@@ -55,9 +55,6 @@ int main() {
 void drawBackground()
 {
     readimagefile("background2.jpg", 0, 0, getmaxx(),getmaxy());
-    setbkcolor(TRANSPARENT);
-    setcolor(WHITE);
-    rectangle(519, 151, 519 + 256, 151 + 365);
 }
 
 bool isInsideCircle(int &x, int &y, int &centerX, int &centerY, int &radius) {
