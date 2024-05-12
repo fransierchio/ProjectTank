@@ -115,7 +115,7 @@ void fillTank() {
     int tankLeft =519;
 
     // Llenar el tanque mientras stopFilling sea falso y el nivel de agua sea mayor que el nivel máximo
-    while (!stopFilling && waterLevel >= tankTop) { 
+    while (!stopFilling && waterLevel > tankTop) { 
         setcolor(LIGHTCYAN);
         setfillstyle(SOLID_FILL, LIGHTCYAN);
         bar(tankLeft, waterLevel - fillSpeed, tankLeft + tankWidth, waterLevel);
@@ -141,12 +141,10 @@ void DrainTank()
         bar(tankLeft, waterLevel, tankLeft + tankWidth, tankTop + tankHeight);
         waterLevel += DrainSpeed; // Aumentar el nivel de agua
         showWaterLevel();
-        if (waterLevel == tankTop + tankHeight)
-    {
-        drawBackground();
     }
+     if (waterLevel > tankTop + tankHeight) {
+        waterLevel = tankTop + tankHeight;
     }
-    
     
     fillingInProgress = false;
 }
