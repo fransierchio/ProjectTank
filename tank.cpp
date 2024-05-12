@@ -144,6 +144,7 @@ void DrainTank()
     }
      if (waterLevel > tankTop + tankHeight) {
         waterLevel = tankTop + tankHeight;
+        drawBackground();
     }
     
     fillingInProgress = false;
