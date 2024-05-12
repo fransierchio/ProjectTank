@@ -43,6 +43,10 @@ int main() {
         StopButtom(x, y);
         DrainButtom(x,y);
         voltButtom(x,y); 
+        if(stopFilling||!fillingInProgress)
+        {
+            showWaterLevel();
+        }
     }
 
     return 0;
@@ -51,6 +55,9 @@ int main() {
 void drawBackground()
 {
     readimagefile("background2.jpg", 0, 0, getmaxx(),getmaxy());
+    setbkcolor(TRANSPARENT);
+    setcolor(WHITE);
+    rectangle(519, 151, 519 + 256, 151 + 365);
 }
 
 bool isInsideCircle(int &x, int &y, int &centerX, int &centerY, int &radius) {
@@ -107,8 +114,6 @@ void fillTank() {
     int tankWidth = 256; 
     int tankLeft =519;
 
-    
-    
     // Llenar el tanque mientras stopFilling sea falso y el nivel de agua sea mayor que el nivel máximo
     while (!stopFilling && waterLevel > tankTop) { 
         setcolor(LIGHTCYAN);
@@ -126,21 +131,15 @@ void DrainTank()
     int tankWidth = 256; 
     int tankLeft =519;
  
-    while (!stopFilling && waterLevel < tankTop + tankHeight) 
+    while (!stopFilling && waterLevel <= tankTop + tankHeight) 
     {
-        // Restaurar el área del agua a la imagen de fondo original
-        readimagefile("background2.jpg", 0, 0, getmaxx(), getmaxy());
+        drawBackground();
         // Restaurar el área del agua a la imagen original
         setcolor(LIGHTCYAN);
         setfillstyle(SOLID_FILL, LIGHTCYAN);
         bar(tankLeft, waterLevel, tankLeft + tankWidth, tankTop + tankHeight);
         waterLevel += DrainSpeed; // Aumentar el nivel de agua
         showWaterLevel();
-        if (waterLevel > tankTop + tankHeight)
-        {
-            drawBackground();
-            showWaterLevel();
-        }
     }
 
 
@@ -184,19 +183,19 @@ void voltButtom(int &x, int &y)
     int up_voltDrainx=1158;int up_voltDrainy=454;int up_voltDrainradius = 23;
     int down_voltDrainx=1210;int down_voltDrainy=454;int down_voltDrainradius = 23; 
 
-    if (isInsideCircle(x, y, up_voltFillx, up_voltFilly, up_voltFillradius) && fillSpeed <10)
+    if (isInsideCircle(x, y, up_voltFillx, up_voltFilly, up_voltFillradius) && fillSpeed <9)
     {
         fillSpeed++;
     }
-    if (isInsideCircle(x, y, down_voltFillx, down_voltFilly, down_voltFillradius) && fillSpeed>1)
+    if (isInsideCircle(x, y, down_voltFillx, down_voltFilly, down_voltFillradius) && fillSpeed>0)
     {
         fillSpeed--;
     }
-    if (isInsideCircle(x, y, up_voltDrainx, up_voltDrainy, up_voltDrainradius) && DrainSpeed<10)
+    if (isInsideCircle(x, y, up_voltDrainx, up_voltDrainy, up_voltDrainradius) && DrainSpeed<9)
     {
         DrainSpeed++;
     }
-    if (isInsideCircle(x, y, down_voltDrainx, down_voltDrainy, down_voltDrainradius) && DrainSpeed>1)
+    if (isInsideCircle(x, y, down_voltDrainx, down_voltDrainy, down_voltDrainradius) && DrainSpeed>0)
     {
         DrainSpeed--;
     }
