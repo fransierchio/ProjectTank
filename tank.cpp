@@ -14,7 +14,7 @@ void showWaterLevel();
 void voltButtom(int &x, int &y);
 void showVoltFill();
 void showVoltDrain();
-
+void Led ();
 
 //variables globales
 bool fillingInProgress = false;
@@ -115,10 +115,7 @@ void fillTank() {
     int tankLeft =519;
 
     // Llenar el tanque mientras stopFilling sea falso y el nivel de agua sea mayor que el nivel máximo
-    while (!stopFilling && waterLevel >= tankTop) { 
-        setcolor(GREEN);
-        setfillstyle(SOLID_FILL, GREEN);
-        fillellipse(155, 385, 31, 31);
+    while (!stopFilling && waterLevel > tankTop) { 
         setcolor(LIGHTCYAN);
         setfillstyle(SOLID_FILL, LIGHTCYAN);
         bar(tankLeft, waterLevel - fillSpeed, tankLeft + tankWidth, waterLevel);
@@ -138,9 +135,6 @@ void DrainTank()
  
     while (!stopFilling && waterLevel <= tankTop + tankHeight) 
     {
-        setcolor(RED);
-        setfillstyle(SOLID_FILL, RED);
-        fillellipse(155, 542, 31, 31);
         drawBackground();
         setcolor(LIGHTCYAN);
         setfillstyle(SOLID_FILL, LIGHTCYAN);
@@ -157,6 +151,7 @@ void DrainTank()
 }
 
 void showWaterLevel() {
+    Led();
     int tankCapacity = 300; // Capacidad del tanque en litros
     double waterHeight = waterLevel - tankTop; // Altura del agua en el tanque
     double ratio = waterHeight / tankHeight; // Proporción del tanque ocupada por el agua
@@ -179,6 +174,7 @@ void showWaterLevel() {
     outtextxy(x, y,text); 
     showVoltFill();
     showVoltDrain();
+    Led ();
 }
 
 void voltButtom(int &x, int &y)
@@ -226,4 +222,29 @@ void showVoltDrain()
     char text[10];
     sprintf(text, "%d", DrainSpeed); 
     outtextxy(x, y, text);
+}
+
+void Led () {
+    // Si el tanque está lleno, dibujar un círculo relleno de color verde
+    if (waterLevel <= tankTop) {
+        setcolor(GREEN);
+        setfillstyle(SOLID_FILL, GREEN);
+        fillellipse(155, 385, 31, 31);
+    }
+    // Si el tanque está vacío o se está drenando, dibujar un círculo relleno de color rojo
+    else if (waterLevel >= tankTop + tankHeight) {
+        setcolor(RED);
+        setfillstyle(SOLID_FILL, RED);
+        fillellipse(155, 542, 31, 31);
+        setcolor(BLACK);
+        setfillstyle(SOLID_FILL, BLACK);
+        fillellipse(155, 385, 31, 31);
+    } else 
+    {
+        setcolor(BLACK);
+        setfillstyle(SOLID_FILL, BLACK);
+        fillellipse(155, 542, 31, 31);
+        setfillstyle(SOLID_FILL, BLACK);
+        fillellipse(155, 385, 31, 31);
+    }
 }
