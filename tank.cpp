@@ -23,6 +23,8 @@ int tankHeight = 365;
 int tankTop = 151;
 int waterLevel = tankTop + tankHeight;
 int DrainSpeed=4, fillSpeed=1;
+thread fillThread;
+thread drainThread;
 
 
 int main() {
@@ -55,9 +57,6 @@ int main() {
 void drawBackground()
 {
     readimagefile("background2.jpg", 0, 0, getmaxx(),getmaxy());
-    setbkcolor(TRANSPARENT);
-    setcolor(WHITE);
-    rectangle(519, 151, 519 + 256, 151 + 365);
 }
 
 bool isInsideCircle(int &x, int &y, int &centerX, int &centerY, int &radius) {
@@ -72,10 +71,10 @@ void FillButtom(int &x, int &y)
     // Verificar si el clic del mouse está dentro del botón circular
     if (isInsideCircle(x, y, fillButtonCenterX, fillButtonCenterY, fillButtonRadius)) 
         {
-            if (!fillingInProgress) 
+            if (!fillingInProgress && !fillThread.joinable()) 
             { 
                 fillingInProgress = true; 
-                thread fillThread(fillTank); 
+                fillThread=thread(fillTank); 
                 fillThread.detach();
                 stopFilling = false;
             }
@@ -100,13 +99,14 @@ void DrainButtom(int &x, int &y)
     // Verificar si el clic del mouse está dentro del botón circular
     if (isInsideCircle(x, y, DrainButtonCenterX, DrainButtonCenterY, DrainButtonRadius)) 
         {
-            if (!fillingInProgress) 
+            if (!fillingInProgress && !drainThread.joinable()) 
             { 
                 fillingInProgress = true; 
-                thread DrainThread(DrainTank); 
-                DrainThread.detach();
+                drainThread = thread(DrainTank); 
+                drainThread.detach();
                 stopFilling = false;
             }
+
         }   
 }
 
@@ -115,7 +115,7 @@ void fillTank() {
     int tankLeft =519;
 
     // Llenar el tanque mientras stopFilling sea falso y el nivel de agua sea mayor que el nivel máximo
-    while (!stopFilling && waterLevel > tankTop) { 
+    while (!stopFilling && waterLevel >= tankTop) { 
         setcolor(LIGHTCYAN);
         setfillstyle(SOLID_FILL, LIGHTCYAN);
         bar(tankLeft, waterLevel - fillSpeed, tankLeft + tankWidth, waterLevel);
@@ -124,6 +124,8 @@ void fillTank() {
         showWaterLevel();
     }
     fillingInProgress = false; 
+
+    
 }
 
 void DrainTank() 
@@ -131,18 +133,21 @@ void DrainTank()
     int tankWidth = 256; 
     int tankLeft =519;
  
-    while (!stopFilling && waterLevel <= tankTop + tankHeight) 
+    while (!stopFilling && waterLevel < tankTop + tankHeight) 
     {
         drawBackground();
-        // Restaurar el área del agua a la imagen original
         setcolor(LIGHTCYAN);
         setfillstyle(SOLID_FILL, LIGHTCYAN);
         bar(tankLeft, waterLevel, tankLeft + tankWidth, tankTop + tankHeight);
         waterLevel += DrainSpeed; // Aumentar el nivel de agua
         showWaterLevel();
+        if (waterLevel == tankTop + tankHeight)
+    {
+        drawBackground();
     }
-
-
+    }
+    
+    
     fillingInProgress = false;
 }
 
